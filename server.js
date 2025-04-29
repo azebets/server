@@ -45,8 +45,9 @@ app.use(function (req, res, next) {
   });
 });
 
+
 mongoose.set('strictQuery', false);
-const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/cyclix?retryWrites=true&w=majority`
+const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/azebets?retryWrites=true&w=majority`
 // const dbUri = `mongodb://127.0.0.1:27017/rx-casino`;
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 5000  })
   .then((result) => console.log('Database connected'))

@@ -3,11 +3,13 @@ const Profile = require('../model/profile');
 const PublicModel = require('../model/public-chat');
 const DiceGame = require('../model/games/classic-dice/dice_game');
 const CrashGame = require('../model/games/crash/crashbet');
+const CrashGameEl = require('../model/games/crash/crashgame');
 const HiloGame = require('../model/games/hilo/hilo_game');
 const PlinkoGame = require('../model/games/plinko/plinko_gameV2');
 const CCPaymentDeposit = require('../model/ccpayment-deposit');
 const CCPaymentWithdrawal = require('../model/ccpayment-withdrawal');
 const DollarWallet = require('../model/dollar-wallet');
+
 
 const ADMIN_EMAIL = 'admin@azebets.com';
 const ADMIN_PASSWORD = 'Keys2541?';
@@ -562,20 +564,19 @@ const getHighestWins = async (req, res) => {
 
     ]);
     // Normalize the data structure
-    const formatWin = (win, game) => ({
+    const formatWin =  (win, game) => ({
       game,
       betId: win.bet_id,
       userId: win.user_id,
-      player: win.username || win.user?.username || 'Anonymous',
+      player:  'Anonymous',
       payout: win.payout,
       winAmount: win.profit,
-      timestamp: win.time
+      timestamp: win.created_at || win.time
     });
 
 
-
     // Combine and format all wins
-    const allWins = [
+    const allWins =  [
       ...crashWins.map(win => formatWin(win, 'Crash')),
       ...diceWins.map(win => formatWin(win, 'Dice')),
       ...hiloWins.map(win => formatWin(win, 'Hilo')),
@@ -583,7 +584,7 @@ const getHighestWins = async (req, res) => {
     ];
 
     // Sort by win amount and get top 7
-    const topWins = allWins
+    const topWins =  allWins
       .sort((a, b) => b.winAmount - a.winAmount)
       .slice(0, 7);
 
