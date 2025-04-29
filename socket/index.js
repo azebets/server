@@ -15,7 +15,7 @@ const {
 async function createsocket(httpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: ["https://azebets.com","http://localhost:5173" ]
+      origin: ["https://azebets.com","http://localhost:5173", "https://azabets.netlify.app" ]
     },
   });
   new Public_Chat(io).connection()
