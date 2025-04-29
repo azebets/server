@@ -480,7 +480,7 @@ class PlinkoGameSocket {
           const bet = await handleBet(data, (event, payload) => {
             this.io.to('plinko-game').emit(event, payload);
           });
-          console.log('On bet complete => ', bet);
+          // console.log('On bet complete => ', bet);
           this.io.to('plinko-game').emit('plinkoBet', bet);
           callback({ code: 0, data: bet });
         } catch (error) {
