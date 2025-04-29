@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const schema = mongoose.Schema
+const mongoose = require('mongoose');
 
-const Userschema = new schema({
+const profileSchema = new mongoose.Schema({
     user_id: {
         type: String,
         required: true,
@@ -47,7 +46,16 @@ const Userschema = new schema({
     },
     is_verified: {
         type: Boolean,
+    },
+    status: {
+        type: String,
+        enum: ['active', 'disabled'],
+        default: 'active'
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     }
-}, { timestamp: true })
+});
 
-module.exports = mongoose.model('profile', Userschema)
+module.exports = mongoose.model('Profile', profileSchema);
