@@ -641,7 +641,7 @@ const handleWebhook = catchAsync(async (req, res) => {
 
                                 // Only update wallet balance if not flagged as risky
                                 if (!isFlaggedAsRisky) {
-                                    const walletCurrency = coinSymbol === 'USDT' ? 'USD' : coinSymbol;
+                                    const walletCurrency = coinSymbol === 'USDT' ? 'USDT' : coinSymbol;
                                     await walletUpdateService.updateWalletBalance({
                                         userId: permanentAddress.user_id,
                                         currency: walletCurrency,

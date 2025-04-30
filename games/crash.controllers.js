@@ -471,14 +471,14 @@ class CrashGameEngine {
       //   });
       // }
 
-      if (bet.currencyName === "SOL") {
+      if (bet.currencyName === "USDT") {
         betPromisses.push(
-          wallet?.sol.updateOne(
+          wallet?.usdt.updateOne(
             { user_id: bet.userId },
             { $inc: { balance: balanceUpdate } }
           ).session(session)
         );
-      } else if (bet.currencyName === "Fun Coupons") {
+      } else if (bet.currencyName === "Fun") {
         betPromisses.push(
           wallet?.fun.updateOne(
             { user_id: bet.userId },

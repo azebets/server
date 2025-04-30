@@ -69,7 +69,7 @@ const handleUpdatewallet = async (data, emitter) => {
   let balance = 0,
     prev_bal = 0;
   let bet_amount = parseFloat(data.betAmount);
-  if (data.token === 'Fun Coupons') {
+  if (data.token === 'Fun') {
     let sjj = await wallet.fun.find({ user_id: data.userId });
     prev_bal = parseFloat(sjj[0].balance);
 
@@ -83,15 +83,15 @@ const handleUpdatewallet = async (data, emitter) => {
       { user_id: data.userId },
       { balance }
     );
-  } else if (data.token === 'SOL') {
-    let sjj = await wallet.sol.find({ user_id: data.userId });
+  } else if (data.token === 'USDT') {
+    let sjj = await wallet.usdt.find({ user_id: data.userId });
     prev_bal = parseFloat(sjj[0].balance);
     if (!data.cashout && prev_bal < bet_amount) {
       throw new Error('Not enough balance!');
     }
     balance = prev_bal + (data.won ? parseFloat(data.profit) : -bet_amount);
     emitter('plinko-wallet', [{ ...data, balance }]);
-    await wallet.sol.updateOne(
+    await wallet.usdt.updateOne(
       { user_id: data.userId },
       { balance }
     );

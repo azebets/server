@@ -154,7 +154,7 @@ function calculateProbabilities(lastCardRankValue) {
 const handleUpdatewallet = async (data, emitter, session) => {
   let prev_bal = 0;
   let bet_amount = parseFloat(data.bet_amount);
-  if (data.token === 'Fun Coupons') {
+  if (data.token === 'Fun') {
     let sjj = await wallet.fun.find({ user_id: data.user_id });
     prev_bal = parseFloat(sjj[0].balance);
 
@@ -167,15 +167,15 @@ const handleUpdatewallet = async (data, emitter, session) => {
       { user_id: data.user_id },
       { balance: current_amount }
     ).session(session);
-  } else if (data.token === 'SOL') {
-    let sjj = await wallet.sol.find({ user_id: data.user_id });
+  } else if (data.token === 'USDT') {
+    let sjj = await wallet.usdt.find({ user_id: data.user_id });
     prev_bal = parseFloat(sjj[0].balance);
     if (!data.cashout && prev_bal < bet_amount) {
       throw new Error('Not enough balance!');
     }
     let current_amount = prev_bal + (data.cashout ? bet_amount : -bet_amount);
     emitter('hilo-wallet', [{ ...data, balance: current_amount }]);
-    await wallet.sol.updateOne(
+    await wallet.usdt.updateOne(
       { user_id: data.user_id },
       { balance: current_amount }
     ).session(session);

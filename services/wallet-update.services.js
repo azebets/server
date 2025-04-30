@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
-const ClyclixDollar = require('../model/dollar-wallet');
-const FunCoupon = require('../model/fun-wallet');
-const ClyclixPoint = require('../model/cp-wallet');
+const USDTWALLET = require('../model/dollar-wallet');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const Bills = require('../model/bill');
-
+const {convertToUSDT} = require("../services/convertion.services"); 
 /**
  * Update user wallet balance
  * @param {Object} data - Wallet update data
@@ -27,23 +25,13 @@ const updateWalletBalance = async (data) => {
     let wallet;
     let tokenImg;
     let tokenName;
-    
+    let convertAmount;
     // Determine which wallet to update based on currency
-    if (currency === 'USD') {
-      wallet = await ClyclixDollar.findOne({ user_id: userId }).session(session);
-      tokenImg = wallet.coin_image;
-      tokenName = wallet.coin_name;
-    } else if (currency === 'FUN') {
-      wallet = await FunCoupon.findOne({ user_id: userId }).session(session);
-      tokenImg = wallet.coin_image;
-      tokenName = wallet.coin_name;
-    } else if (currency === 'CP') {
-      wallet = await ClyclixPoint.findOne({ user_id: userId }).session(session);
-      tokenImg = wallet.coin_image;
-      tokenName = wallet.coin_name;
-    } else {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid currency');
-    }
+
+    wallet = await USDTWALLET.findOne({ user_id: userId }).session(session);
+    tokenImg = wallet.coin_image;
+    tokenName = wallet.coin_name;
+    convertAmount = await convertToUSDT(currency, amount);
     
     if (!wallet) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Wallet not found');
@@ -52,36 +40,24 @@ const updateWalletBalance = async (data) => {
     // Calculate new balance
     let newBalance;
     if (operation === 'add') {
-      newBalance = wallet.balance + amount;
+      newBalance = wallet.balance + convertAmount;
     } else if (operation === 'subtract') {
-      if (wallet.balance < amount) {
+      if (wallet.balance < convertAmount) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient balance');
       }
-      newBalance = wallet.balance - amount;
+      newBalance = wallet.balance - convertAmount;
     } else {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid operation');
     }
     
     // Update wallet balance
-    if (currency === 'USD') {
-      await ClyclixDollar.updateOne(
+
+      await USDTWALLET.updateOne(
         { user_id: userId },
         { balance: newBalance },
         { session }
       );
-    } else if (currency === 'FUN') {
-      await FunCoupon.updateOne(
-        { user_id: userId },
-        { balance: newBalance },
-        { session }
-      );
-    } else if (currency === 'CP') {
-      await ClyclixPoint.updateOne(
-        { user_id: userId },
-        { balance: newBalance },
-        { session }
-      );
-    }
+  
     
     // Create bill record
     const billId = Math.floor(Math.random() * 1000000000);
@@ -91,7 +67,7 @@ const updateWalletBalance = async (data) => {
       token_img: tokenImg,
       token_name: tokenName,
       balance: newBalance,
-      trx_amount: amount,
+      trx_amount: convertAmount,
       bill_id: billId,
       datetime: new Date(),
       status: true
@@ -103,14 +79,9 @@ const updateWalletBalance = async (data) => {
     await session.commitTransaction();
     session.endSession();
     
-    // Return updated wallet
-    if (currency === 'USD') {
-      return await ClyclixDollar.findOne({ user_id: userId });
-    } else if (currency === 'FUN') {
-      return await FunCoupon.findOne({ user_id: userId });
-    } else if (currency === 'CP') {
-      return await ClyclixPoint.findOne({ user_id: userId });
-    }
+
+   return await USDTWALLET.findOne({ user_id: userId });
+
   } catch (error) {
     // Abort the transaction on error
     await session.abortTransaction();

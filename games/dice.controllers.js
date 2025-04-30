@@ -34,7 +34,7 @@ async function handleUpdatewallet(data) {
       { user_id: data.user_id }, {
       nonce: parseFloat(data.nonce) + 1
     });
-    if (data.token === "Fun Coupons") {
+    if (data.token === "Fun") {
       let sjj = await wallet?.fun.findOne({ user_id: data.user_id });
       let prev_bal = parseFloat(sjj.balance);
       let wining_amount = parseFloat(data.wining_amount);
@@ -53,20 +53,20 @@ async function handleUpdatewallet(data) {
         );
       }
     }
-    else if (data.token === "SOL") {
-      let sjj = await wallet?.sol.find({ user_id: data.user_id });
+    else if (data.token === "USDT") {
+      let sjj = await wallet?.usdt.find({ user_id: data.user_id });
       let prev_bal = parseFloat(sjj[0].balance);
       let wining_amount = parseFloat(data.wining_amount);
       let bet_amount = parseFloat(data.bet_amount);
       if (data.has_won) {
         let current_amount = prev_bal + wining_amount;
-        await wallet?.sol.updateOne(
+        await wallet?.usdt.updateOne(
           { user_id: data.user_id },
           { balance: prev_bal + wining_amount }
         );
       } else {
         let current_amount = prev_bal - bet_amount;
-        await wallet?.sol.updateOne(
+        await wallet?.usdt.updateOne(
           { user_id: data.user_id },
           { balance: current_amount }
         );
@@ -200,11 +200,11 @@ const HandlePlayDice = (async(req, res) => {
   };
 
   let wallet_bal = null
-  if(data.token === "SOL"){
-      let response = await wallet?.sol.findOne({user_id})
+  if(data.token === "USDT"){
+      let response = await wallet?.usdt.findOne({user_id})
       wallet_bal = (response?.balance)
   }
-  else if(data.token === "Fun Coupons"){
+  else if(data.token === "Fun"){
     let response = await wallet?.fun.findOne({user_id})
       wallet_bal = response?.balance
   }

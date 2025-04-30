@@ -6,7 +6,7 @@ const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const { InitializeDiceGame } = require("../games/dice.controllers");
 
-const {createFC, createCD, createCP, handleWalletInstance, handleAllWallets } = require("../wallet_transaction/index")
+const {createFC, createCD, handleWalletInstance, handleAllWallets } = require("../wallet_transaction/index")
 const { RegisterRefCode } = require("../controllers/profile.controller")
 const Profile = require("../model/profile");
 const { handleNodeMailer } = require("../emailConfig/config")
@@ -90,7 +90,6 @@ const handleSignup = (async(req, res)=>{
             }
             await createFC(user_id)
             await createCD(user_id) 
-            await createCP(user_id)
             await InitializeDiceGame(user_id)
             let wallet = handleWalletInstance()
             await RegisterRefCode({user_id, referral:auth?.referral})
@@ -188,7 +187,6 @@ const handleGoogleAuth = (async(req, res)=>{
     }
     await createFC(user_id)
     await createCD(user_id) 
-    await createCP(user_id)
     const token = createToken(user_id);
     await Profile.create(profile)
     await UserAuth.create(authData)

@@ -47,11 +47,11 @@ function main (serverSeed, clientSeed, nonce) {
 } 
 
 const updateUserWallet = (async(data)=>{
-    if(data.coin_name === "Fun Coupons"){
+    if(data.coin_name === "Fun"){
      await wallet.fun.updateOne({ user_id:data.user_id }, {balance: data.balance });
     }
-    if(data.coin_name === "USD"){
-      await wallet.usd.updateOne({ user_id:data.user_id }, {balance: data.balance });
+    if(data.coin_name === "USDT"){
+      await wallet.usdt.updateOne({ user_id:data.user_id }, {balance: data.balance });
     }
 })
 
@@ -149,11 +149,11 @@ const handleCashout = (async(req,res)=>{
     const user_id = req.id
     let {data} = req.body
     let prev_bal;
-    if(data.bet_token_name === "Fun Coupons"){
+    if(data.bet_token_name === "Fun"){
       prev_bal = await wallet.fun.find({user_id})
     }
-    if(data.bet_token_name === "USD"){
-      prev_bal = await wallet.usd.find({user_id})
+    if(data.bet_token_name === "USDT"){
+      prev_bal = await wallet.usdt.find({user_id})
     }
     let skjb = {
       is_active: true,

@@ -1,44 +1,31 @@
-const solModel = require("../model/dollar-wallet")
+const usdtModel = require("../model/dollar-wallet")
 const FunCoupon = require("../model/fun-wallet")
-const ClyclixPoint = require("../model/cp-wallet")
 
-let solWallet = "https://cryptologos.cc/logos/thumbs/solana.png?v=034"
-let funCouponImage = "https://res.cloudinary.com/dxwhz3r81/image/upload/v1721026027/Fun_Coupon_-_Blue_c60t1j.jpg"
-let clyclixPointImage = "https://res.cloudinary.com/dxwhz3r81/image/upload/v1721026026/Cyclix_Points_-_Purple_njsnim.png"
- 
+let usdtWalletIcon =  "/assets/USDT.webp"
+let funCouponImage = "/assets/rx-casino-logo.png"
+
 // ================ store default wallet details ===================
 const handleWalletInstance = (()=>{
     let wallet = [
         {
            is_active: false,
             balance: 0,
-           coin_image: solWallet, 
-           coin_name: "SOL", 
+           coin_image: usdtWalletIcon, 
+           coin_name: "USDT", 
        },
        {
         is_active: true,   
         balance: 10000,
         coin_image: funCouponImage, 
-        coin_name: "Fun Coupons", 
+        coin_name: "Fun", 
        }
    ]
    return wallet
 })
 
-const fetchCPWallet = (async(user_id)=>{
-    // try{
-    //    let response = await ClyclixPoint.findOne({user_id})
-    //    return response
-    // }
-    // catch(error){
-    //     console.log(error)
-    //     return null
-    // }
-})
-
 const fetchCDWallet = (async(user_id)=>{
     try{
-       let response = await solModel.findOne({user_id})
+       let response = await usdtModel.findOne({user_id})
        return response
     }
     catch(error){
@@ -63,34 +50,25 @@ const handleAllWallets = (async(user_id)=>{
     return wallet
 })
 
-// ================ store CP wallet details ===================
-const createCP = (async(user_id)=>{
-    let balance =  0
-    let coin_image = clyclixPointImage
-    let coin_name = "RX Points"
-    let data = {user_id, balance, coin_image, coin_name, is_active: false}
-    await ClyclixPoint.create(data)
-})
-
  // ================ store CD wallet  details===================
  const createCD = (async(user_id)=>{
-    let coin_image = solWallet
-    let coin_name = "SOL"
+    let coin_image = usdtWalletIcon
+    let coin_name = "USDT"
     let data = {user_id, balance:0.0000, coin_image, coin_name, is_active: false}
-    await solModel.create(data)
+    await usdtModel.create(data)
 })
 
 // ================ store FC wallet  details===================
 const createFC = (async(user_id)=>{
     let coin_image = funCouponImage
     let date = new Date()
-    let data = {user_id, balance:10000, coin_image, coin_name: "Fun Coupons", date, is_active: true}
+    let data = {user_id, balance:10000, coin_image, coin_name: "Fun", date, is_active: true}
     await FunCoupon.create(data)
 })
 
 const handleChangeDefaultWalletEl = (async(user_id ,data, res)=>{
-    if(data.coin_image === solWallet){
-        await solModel.updateOne({user_id},{
+    if(data.coin_image === usdtWalletIcon){
+        await usdtModel.updateOne({user_id},{
             is_active: true
         })
         await FunCoupon.updateOne({user_id},{
@@ -101,7 +79,7 @@ const handleChangeDefaultWalletEl = (async(user_id ,data, res)=>{
         await FunCoupon.updateOne({user_id},{
             is_active: true
         })
-        await solModel.updateOne({user_id},{
+        await usdtModel.updateOne({user_id},{
             is_active: false
         })
     }
@@ -117,8 +95,8 @@ const fetchWallet = (async(req, res)=>{
             const result = await FunCoupon.findOne({user_id})
             return res.status(200).json(result)
         }
-        if(wallet === "sol"){
-            const result = await solModel.findOne({user_id})
+        if(wallet === "usdt"){
+            const result = await usdtModel.findOne({user_id})
             return res.status(200).json(result)
         }
     }
@@ -128,8 +106,8 @@ const fetchWallet = (async(req, res)=>{
 })
 
 const wallet = {
-    sol: solModel,
+    usdt: usdtModel,
     fun: FunCoupon
 }
 
-module.exports = {createFC, createCD, createCP,wallet,fetchWallet,  handleWalletInstance, handleAllWallets, handleChangeDefaultWalletEl }
+module.exports = {createFC, createCD,wallet,fetchWallet,  handleWalletInstance, handleAllWallets, handleChangeDefaultWalletEl }
