@@ -1,9 +1,7 @@
 const { Server } = require("socket.io");
-const Chats = require("../model/public-chat");
 const DiceGame = require("../model/games/classic-dice/dice_game");  
 const { CrashGameEngine } = require("../games/crash.controllers");
 const { Public_Chat } = require("../controllers/public_chat.controller");
-const { MinesGames } = require("../games/mines.controllers");
 const { PlinkoGameSocket } = require("../games/plinko.controller");
 const {
   handleHiloBet,
@@ -19,7 +17,6 @@ async function createsocket(httpServer) {
     },
   });
   new Public_Chat(io).connection()
-  new MinesGames(io).connect()
     // Plinko GAME
   new PlinkoGameSocket(io).listen();
 
