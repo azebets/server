@@ -242,6 +242,7 @@ const getWithdrawalRecord = async (reqData = {}) => {
 const getCoinList = async () => {
   const reqData = {};
 
+
   const path = `${apiBaseUrl}/getCoinList`;
   const timestamp = Math.floor(Date.now() / 1000);
   const sign = getSignedText(reqData, timestamp);

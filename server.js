@@ -12,9 +12,10 @@ const app = express();
 app.use(express.json({limit: '50mb'}));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true , limit: '50mb'}));
+
 app.use(cors({
-      origin: ["https://azebets.com","http://localhost:5173", "https://azabets.netlify.app" ]
-    }));
+  origin: ["https://azebets.com","http://localhost:5173", "https://azabets.netlify.app", "https://azebet-admin.netlify.app" ]
+}));
 
 const server = createServer(app);
 async function main() {
@@ -47,10 +48,9 @@ app.use(function (req, res, next) {
   });
 });
 
-
 mongoose.set('strictQuery', false);
-const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/azebets?retryWrites=true&w=majority`
-// const dbUri = `mongodb://127.0.0.1:27017/rx-casino`;
+// const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/azebets?retryWrites=true&w=majority`
+const dbUri = `mongodb://127.0.0.1:27017/azebets`;
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 5000  })
   .then((result) => console.log('Database connected'))
   .catch((err) => console.log("Database failed to connect"))
