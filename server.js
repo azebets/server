@@ -27,7 +27,7 @@ main();
 routeManager(app)
 
 app.get("/", (req, res) => {
-  res.send("Welcome to cyclix backend server");
+  res.send("Welcome to azabets backend server");
 })
 
 app.use(function (err, req, res, next) {
@@ -47,7 +47,6 @@ app.use(function (req, res, next) {
       error : `Can't find ${req.originalUrl}`
   });
 });
-
 
 mongoose.set('strictQuery', false);
 const dbUri = `mongodb+srv://highscoreteh:AoUXugCyZEfpBmMx@cluster0.xmpkpjc.mongodb.net/azebets?retryWrites=true&w=majority`
